@@ -6,33 +6,23 @@
 
 ## Build
 
-スクリプトによりビルド(`devcontainer build` が使われる)。
+スクリプトによるビルド(`devcontainer build` が使われる)。
 
 ```
-scripts/image_build.sh <REPO> <VARIANT> <PLATFORM>
+Usage: image_build.sh [OPTIONS] -- <variant>
+Options:
+    -r, --repo       <repo>          Repository name (required)
+    -t, --tag        <tag>           Image tag (default: latest)
+    -p, --platform   <platforms>     Target platforms (default: linux/amd64,linux/arm64)
+        --push       <boolean>       Whether to push the image (default: false)
+Arguments:
+    <variant>                        Variant name (required)"
 ```
 
-以下のように push 用の中間イメージが作成される。
-(`devcontainer build` とオプションでラベルを指定できないため中間イメージ扱いとしている)
-
 ```
-$ scripts/image_build.sh "hankei6km/test-dev-containers-images" basic linux/arm64 
-
-$ dcoker image ls
-REPOSITORY                                           TAG            IMAGE ID       CREATED         SIZE
-ghcr.io/hankei6km/test-dev-containers-images         basic-temp     baf61f8f7d1b   17 hours ago    885MB
+$ ./scripts/image_build.sh --repo "hankei6km/test-dev-containers-images" --tag test --platform linux/arm64 basic
 ```
 
-## Push
-
-スクリプトにより push (`docker buildx build` が使われる)。
-
-push の認証情報として以下が必要(GitHub Action での実行を想定)。
-- `GITHUB_ACTOR` - GitHub のユーザ名
-- `GH_TOKEN` - GitHub の Personal Access Token (package への write 権限が必要)
-
-```
-scripts/image_push.sh <REPO> <VARIANT> <TAG>
-```
-
-ラベル `org.opencontainers.image.source` に `<REPO>` が設定されたイメージが ghcr へ push される。
+> **Note:**  
+> `--push true` を指定すると、ビルド後にイメージを ghcr へ push する。
+> なお、`devcontainer build` のフラグ指定により、ラベル `org.opencontainers.image.source` に `<repo>` を設定しているが、`devcontainer build` の不具合により現状では実際には設定されない。よって、 ghcr へ push した後に手動で設定する必要がある。
