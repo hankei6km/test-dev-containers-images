@@ -69,7 +69,7 @@ devcontainer build \
     --workspace-folder "./src/${VARIANT}/" \
     --config "./src/${VARIANT}/.devcontainer/devcontainer.json" \
     --image-name "ghcr.io/${REPO}:${VARIANT}-${TAG}" \
-    --push ${PUSH} \
+    --push "${PUSH}" \
     --platform "${PLATFORM}"
 
 # "devcontainer build" の "--label" が動作しない \
