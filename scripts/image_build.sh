@@ -10,11 +10,13 @@ Options:
     -t, --tag        <tag>           Image tag (default: latest)
     -p, --platform   <platforms>     Target platforms (default: linux/amd64,linux/arm64)
         --push       <boolean>       Whether to push the image (default: false)
+        --cache-from <cache-from>    Cache source (optional)
+        --cache-to   <cache-to>      Cache destination (optional)
 Arguments:
     <variant>                        Variant name (required)"
 
 # Parse arguments using getopt
-OPTIONS=$(getopt -o r:t:p: --long repo:,tag:,platform:,push: -- "$@")
+OPTIONS=$(getopt -o r:t:p: --long repo:,tag:,platform:,push:,cache-from:,cache-to: -- "$@")
 if [[ $? -ne 0 ]]; then
     echo "${USAGE_MSG}"
     exit 1
@@ -26,6 +28,8 @@ REPO=""
 TAG="latest"
 PLATFORM="linux/amd64,linux/arm64"
 PUSH="false"
+CACHE_FROM=""
+CACHE_TO=""
 
 while true; do
     case "$1" in
@@ -43,6 +47,14 @@ while true; do
         ;;
     --push)
         PUSH="$2"
+        shift 2
+        ;;
+    --cache-from)
+        CACHE_FROM="$2"
+        shift 2
+        ;;
+    --cache-to)
+        CACHE_TO="$2"
         shift 2
         ;;
     --)
@@ -65,12 +77,23 @@ fi
 echo "${GH_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
 echo "Pushing ${REPO}:${VARIANT}-${TAG} to ghcr.io"
 
-devcontainer build \
-    --workspace-folder "./src/${VARIANT}/" \
-    --config "./src/${VARIANT}/.devcontainer/devcontainer.json" \
-    --image-name "ghcr.io/${REPO}:${VARIANT}-${TAG}" \
-    --push "${PUSH}" \
+DEVCONTAINER_ARGS=(
+    --workspace-folder "./src/${VARIANT}/"
+    --config "./src/${VARIANT}/.devcontainer/devcontainer.json"
+    --image-name "ghcr.io/${REPO}:${VARIANT}-${TAG}"
+    --push "${PUSH}"
     --platform "${PLATFORM}"
+)
+
+if [[ -n "$CACHE_FROM" ]]; then
+    DEVCONTAINER_ARGS+=(--cache-from "$CACHE_FROM")
+fi
+
+if [[ -n "$CACHE_TO" ]]; then
+    DEVCONTAINER_ARGS+=(--cache-to "$CACHE_TO")
+fi
+
+devcontainer build "${DEVCONTAINER_ARGS[@]}"
 
 # "devcontainer build" の "--label" が動作しない \
 # おそらくこれ -> https://github.com/devcontainers/cli/issues/930  \
