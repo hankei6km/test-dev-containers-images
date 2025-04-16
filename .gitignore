@@ -1,0 +1,20 @@
+# Ignore the tmp directory
+tmp/
+
+# Ignore common system files
+.DS_Store
+Thumbs.db
+
+# Ignore log files
+*.log
+
+# Ignore node_modules if applicable
+node_modules/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
