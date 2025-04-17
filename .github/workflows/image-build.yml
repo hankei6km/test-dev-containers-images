@@ -1,0 +1,40 @@
+name: Build and Push Dev Container Image
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "!v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Image
+        run: |
+          DATE_TAG="$(date +%Y-%m-%d)"
+          ./scripts/image_build.sh \
+            --repo "${REPO_NAME}" \
+            --tag "${DATE_TAG}" \
+            --platform "${PLATFORM}" \
+            --push "true" \
+            --cache-to "type=gha" \
+            --cache-from "type=gha" -- basic
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          REPO_NAME: ${{ github.repository }}
+          GITHUB_REF: ${{ github.ref }}
+          PLATFORM: "linux/amd64,linux/arm64"
