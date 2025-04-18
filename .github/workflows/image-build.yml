@@ -60,7 +60,7 @@ jobs:
             --platform "${PLATFORM}" \
             --push "true" \
             --cache-to "type=local,dest=${TEMP_DIR}" \
-            --cache-from "type=local,from=${TEMP|DIR}"  \
+            --cache-from "type=local,from=${TEMP_DIR}"  \
             -- \
             basic
         env:
