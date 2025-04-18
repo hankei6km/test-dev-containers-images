@@ -12,11 +12,12 @@ Options:
         --push       <boolean>       Whether to push the image (default: false)
         --cache-from <cache-from>    Cache source (optional)
         --cache-to   <cache-to>      Cache destination (optional)
+    -u, --user       <user>          Custom user for docker login (optional)
 Arguments:
     <variant>                        Variant name (required)"
 
 # Parse arguments using getopt
-OPTIONS=$(getopt -o r:t:p: --long repo:,tag:,platform:,push:,cache-from:,cache-to: -- "$@")
+OPTIONS=$(getopt -o r:t:p:u: --long repo:,tag:,platform:,push:,cache-from:,cache-to:,user: -- "$@")
 if [[ $? -ne 0 ]]; then
     echo "${USAGE_MSG}"
     exit 1
@@ -30,6 +31,7 @@ PLATFORM="linux/amd64,linux/arm64"
 PUSH="false"
 CACHE_FROM=""
 CACHE_TO=""
+USER=""
 
 while true; do
     case "$1" in
@@ -57,6 +59,10 @@ while true; do
         CACHE_TO="$2"
         shift 2
         ;;
+    --user | -u)
+        USER="$2"
+        shift 2
+        ;;
     --)
         shift
         break
@@ -74,7 +80,18 @@ if [[ -z "$REPO" || -z "$VARIANT" ]]; then
     exit 1
 fi
 
-echo "${GH_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
+# Check if USER is empty and exit with an error if not provided
+if [[ -z "$USER" ]]; then
+    echo "Error: --user argument is required. Please specify a user."
+    exit 1
+fi
+
+if [[ -n "$USER" ]]; then
+    echo "${GH_TOKEN}" | docker login ghcr.io -u "$USER" --password-stdin
+else
+    echo "${GH_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
+fi
+
 echo "Pushing ${REPO}:${VARIANT}-${TAG} to ghcr.io"
 
 DEVCONTAINER_ARGS=(

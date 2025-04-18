@@ -61,6 +61,7 @@ jobs:
             --push "true" \
             --cache-to "type=local,dest=${TEMP_DIR}" \
             --cache-from "type=local,src=${TEMP_DIR}"  \
+            --user "${GITHUB_ACTOR}" \
             -- \
             basic
         env:
