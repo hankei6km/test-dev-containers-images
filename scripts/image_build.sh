@@ -13,11 +13,12 @@ Options:
         --cache-from <cache-from>    Cache source (optional)
         --cache-to   <cache-to>      Cache destination (optional)
     -u, --user       <user>          Custom user for docker login (optional)
+        --is-main-branch <boolean>   Whether the current branch is the main branch (default: false)
 Arguments:
     <variant>                        Variant name (required)"
 
 # Parse arguments using getopt
-OPTIONS=$(getopt -o r:t:p:u: --long repo:,tag:,platform:,push:,cache-from:,cache-to:,user: -- "$@")
+OPTIONS=$(getopt -o r:t:p:u: --long repo:,tag:,platform:,push:,cache-from:,cache-to:,user:,is-main-branch: -- "$@")
 if [[ $? -ne 0 ]]; then
     echo "${USAGE_MSG}"
     exit 1
@@ -32,6 +33,7 @@ PUSH="false"
 CACHE_FROM=""
 CACHE_TO=""
 USER=""
+IS_MAIN_BRANCH="false"
 
 while true; do
     case "$1" in
@@ -61,6 +63,10 @@ while true; do
         ;;
     --user | -u)
         USER="$2"
+        shift 2
+        ;;
+    --is-main-branch)
+        IS_MAIN_BRANCH="$2"
         shift 2
         ;;
     --)
@@ -110,7 +116,37 @@ if [[ -n "$CACHE_TO" ]]; then
     DEVCONTAINER_ARGS+=(--cache-to "$CACHE_TO")
 fi
 
-devcontainer build "${DEVCONTAINER_ARGS[@]}"
+# Capture the output of the first devcontainer build command
+BUILD_OUTPUT=$(devcontainer build "${DEVCONTAINER_ARGS[@]}")
+
+# Parse the JSON output and check the outcome
+OUTCOME=$(echo "$BUILD_OUTPUT" | jq -r '.outcome')
+if [[ "$OUTCOME" != "success" ]]; then
+    echo "Build failed with output: $BUILD_OUTPUT"
+    exit 1
+fi
+
+# If PUSH and IS_MAIN_BRANCH are both true, rebuild with updated image name
+if [[ "$PUSH" == "true" && "$IS_MAIN_BRANCH" == "true" ]]; then
+    NEW_IMAGE_NAME="ghcr.io/${REPO}:${VARIANT}-latest"
+    DEVCONTAINER_ARGS=(
+        --workspace-folder "./src/${VARIANT}/"
+        --config "./src/${VARIANT}/.devcontainer/devcontainer.json"
+        --image-name "$NEW_IMAGE_NAME"
+        --push "$PUSH"
+        --platform "$PLATFORM"
+    )
+
+    if [[ -n "$CACHE_FROM" ]]; then
+        DEVCONTAINER_ARGS+=(--cache-from "$CACHE_FROM")
+    fi
+
+    if [[ -n "$CACHE_TO" ]]; then
+        DEVCONTAINER_ARGS+=(--cache-to "$CACHE_TO")
+    fi
+
+    devcontainer build "${DEVCONTAINER_ARGS[@]}"
+fi
 
 # "devcontainer build" の "--label" が動作しない \
 # おそらくこれ -> https://github.com/devcontainers/cli/issues/930  \
