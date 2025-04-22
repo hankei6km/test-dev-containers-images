@@ -50,7 +50,7 @@ jobs:
         run: |
           npm install -g @devcontainers/cli
 
-      - name: Build and Push Image
+      - name: Build and Push Basic Variant
         run: |
           TEMP_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache"
           CACHE_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache/${VARIANT}"
@@ -77,3 +77,28 @@ jobs:
           PLATFORM: "linux/amd64,linux/arm64"
           IS_MAIN_BRANCH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           VARIANT: "basic"
+
+      - name: Build and Push DIND Variant
+        run: |
+          TEMP_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache"
+          BRANCH_NAME="$(echo $GITHUB_HEAD_REF | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
+          BRANCH_DATE_TAG="${BRANCH_NAME}-$(date +%Y-%m-%d)"
+          ./scripts/image_build.sh \
+            --repo "${REPO_NAME}" \
+            --tag "${BRANCH_DATE_TAG}" \
+            --platform "${PLATFORM}" \
+            --push "true" \
+            --cache-to "type=local,dest=${TEMP_DIR}" \
+            --cache-from "type=local,src=${TEMP_DIR}"  \
+            --user "${GITHUB_ACTOR}" \
+            --is-main-branch "${IS_MAIN_BRANCH}" \
+            -- \
+            dind
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          REPO_NAME: ${{ github.repository }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_HEAD_REF: ${{ github.head_ref }}
+          PLATFORM: "linux/amd64,linux/arm64"
+          IS_MAIN_BRANCH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}

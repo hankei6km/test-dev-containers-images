@@ -1,0 +1,25 @@
+{
+  "build": {
+    "dockerfile": "./Dockerfile",
+    "context": "."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "remoteUser": "devcontainer",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "docker.docker"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "[jsons]": {
+          "editor.defaultFormatter": "vscode.json-language-features",
+          "editor.tabSize": 2
+        }
+      }
+    }
+  }
+}
