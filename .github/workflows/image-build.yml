@@ -53,21 +53,19 @@ jobs:
       - name: Build and Push Image
         run: |
           TEMP_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache"
-          CACHE_DIR="${TEMP_DIR}/${VARIANT}"
           BRANCH_NAME="$(echo $GITHUB_HEAD_REF | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}-$(date +%Y-%m-%d)"
-          test -d "${CACHE_DIR}" || mkdir -p "${CACHE_DIR}"
           ./scripts/image_build.sh \
             --repo "${REPO_NAME}" \
             --tag "${BRANCH_DATE_TAG}" \
             --platform "${PLATFORM}" \
             --push "true" \
-            --cache-to "type=local,dest=${CACHE_DIR}" \
-            --cache-from "type=local,src=${CACHE_DIR}" \
+            --cache-to "type=local,dest=${TEMP_DIR}" \
+            --cache-from "type=local,src=${TEMP_DIR}"  \
             --user "${GITHUB_ACTOR}" \
             --is-main-branch "${IS_MAIN_BRANCH}" \
             -- \
-            ${VARIANT}
+            basic
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
@@ -76,4 +74,3 @@ jobs:
           GITHUB_HEAD_REF: ${{ github.head_ref }}
           PLATFORM: "linux/amd64,linux/arm64"
           IS_MAIN_BRANCH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-          VARIANT: "basic"
