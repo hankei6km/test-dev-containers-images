@@ -88,12 +88,12 @@ jobs:
             --tag "${BRANCH_DATE_TAG}" \
             --platform "${PLATFORM}" \
             --push "true" \
-            --cache-to "type=local,dest=${TEMP_DIR}" \
-            --cache-from "type=local,src=${TEMP_DIR}"  \
+            --cache-to "type=local,scope=${VARIANT},dest=${TEMP_DIR}" \
+            --cache-from "type=local,scope=${VARIANT},src=${TEMP_DIR}"  \
             --user "${GITHUB_ACTOR}" \
             --is-main-branch "${IS_MAIN_BRANCH}" \
             -- \
-            dind
+            ${VARIANT}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
@@ -102,3 +102,4 @@ jobs:
           GITHUB_HEAD_REF: ${{ github.head_ref }}
           PLATFORM: "linux/amd64"
           IS_MAIN_BRANCH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          VARIANT: "dind"
