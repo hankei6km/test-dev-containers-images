@@ -74,8 +74,7 @@ jobs:
           REPO_NAME: ${{ github.repository }}
           GITHUB_REF: ${{ github.ref }}
           GITHUB_HEAD_REF: ${{ github.head_ref }}
-          # PLATFORM: "linux/amd64,linux/arm64"
-          PLATFORM: "linux/amd64"
+          PLATFORM: "linux/amd64,linux/arm64"
           IS_MAIN_BRANCH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           VARIANT: "basic"
 
@@ -101,6 +100,6 @@ jobs:
           REPO_NAME: ${{ github.repository }}
           GITHUB_REF: ${{ github.ref }}
           GITHUB_HEAD_REF: ${{ github.head_ref }}
-          PLATFORM: "linux/amd64"
+          PLATFORM: "linux/amd64,linux/arm64"
           IS_MAIN_BRANCH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
           VARIANT: "dind"
