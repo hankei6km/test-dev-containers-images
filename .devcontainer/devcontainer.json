@@ -1,27 +1,6 @@
 {
-  "build": {
-    "dockerfile": "./Dockerfile",
-    "context": "."
-  },
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "installZsh": "false",
-      "installOhMyZsh": "false",
-      "username": "devcontainer",
-      "userUid": "1000",
-      "userGid": "1000",
-      "upgradePackages": "true"
-    },
-    "ghcr.io/devcontainers/features/git:1": {
-      "version": "latest",
-      "ppa": "false"
-    },
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-    "ghcr.io/devcontainers/features/node:1": {},
-    "ghcr.io/devcontainers-extra/features/devcontainers-cli:1": {},
-    "ghcr.io/devcontainers-extra/features/shfmt:1": {}
-  },
+  "image": "ghcr.io/hankei6km/test-dev-containers-images:dind-latest",
+  "features": {},
   // "userEnvProbe": "loginShell",
   // "remoteEnv": {
   //   "GH_TOKEN": "${localEnv:GH_TOKEN}"
@@ -29,13 +8,7 @@
   "remoteUser": "devcontainer",
   "customizations": {
     "vscode": {
-      "extensions": [
-        "rogalmic.bash-debug",
-        "mads-hartmann.bash-ide-vscode",
-        "ms-azuretools.vscode-docker",
-        "github.vscode-github-actions",
-        "GitHub.vscode-pull-request-github"
-      ],
+      "extensions": [],
       "settings": {
         "editor.formatOnSave": true,
         "[jsons]": {
