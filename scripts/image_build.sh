@@ -19,10 +19,6 @@ Arguments:
 
 # Parse arguments using getopt
 OPTIONS=$(getopt -o r:t:p:u: --long repo:,tag:,platform:,push:,cache-from:,cache-to:,user:,is-main-branch: -- "$@")
-if [[ $? -ne 0 ]]; then
-    echo "${USAGE_MSG}"
-    exit 1
-fi
 
 eval set -- "${OPTIONS}"
 
