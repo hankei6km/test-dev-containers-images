@@ -36,8 +36,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/tmp/buildx-cache
-          # とりあえずキャッシュのキーはブランチのヘッドにしておく。
-          key: ${{ runner.os }}-docker-buildx-${{ github.head_ref }}
+          key: ${{ runner.os }}-docker-buildx-${{ hashFiles('**/src/**/devcontainer.json','**/src/**/devcontainer-lock.json','**/src/**/Dockerfile') }}
           restore-keys: |
             ${{ runner.os }}-docker-buildx
 
