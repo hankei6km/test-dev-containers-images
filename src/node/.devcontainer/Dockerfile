@@ -1,0 +1,1 @@
+FROM ghcr.io/hankei6km/test-dev-containers-images:basic-latest
