@@ -51,7 +51,8 @@ jobs:
 
       - name: Build and Push Basic Variant
         run: |
-          CACHE_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache"
+          TEMP_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache"
+          CACHE_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache/${VARIANT}"
           test -d "${CACHE_DIR}" || mkdir -m 0700 -p "${CACHE_DIR}"
           BRANCH_NAME="$(echo $GITHUB_HEAD_REF | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}-$(date +%Y-%m-%d)"
@@ -78,7 +79,9 @@ jobs:
 
       - name: Build and Push DIND Variant
         run: |
-          CACHE_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache"
+          TEMP_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache"
+          CACHE_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache/${VARIANT}"
+          test -d "${CACHE_DIR}" || mkdir -m 0700 -p "${CACHE_DIR}"
           BRANCH_NAME="$(echo $GITHUB_HEAD_REF | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}-$(date +%Y-%m-%d)"
           ./scripts/image_build.sh \
@@ -104,7 +107,9 @@ jobs:
 
       - name: Build and Push Node Variant
         run: |
-          CACHE_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache"
+          TEMP_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache"
+          CACHE_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache/${VARIANT}"
+          test -d "${CACHE_DIR}" || mkdir -m 0700 -p "${CACHE_DIR}"
           BRANCH_NAME="$(echo $GITHUB_HEAD_REF | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}-$(date +%Y-%m-%d)"
           ./scripts/image_build.sh \
