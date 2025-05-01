@@ -10,7 +10,7 @@ Options:
     -t, --tag        <tag>           Image tag (default: latest)
     -p, --platform   <platforms>     Target platforms (default: linux/amd64,linux/arm64)
         --push       <boolean>       Whether to push the image (default: false)
-        --cache-from <cache-from>    Cache source (optional)
+        --cache-from <cache-from>    Cache source (optional, can be specified multiple times)
         --cache-to   <cache-to>      Cache destination (optional)
     -u, --user       <user>          Custom user for docker login (optional)
         --is-main-branch <boolean>   Whether the current branch is the main branch (default: false)
@@ -26,7 +26,7 @@ REPO=""
 TAG="latest"
 PLATFORM="linux/amd64,linux/arm64"
 PUSH="false"
-CACHE_FROM=""
+CACHE_FROM=()
 CACHE_TO=""
 USER=""
 IS_MAIN_BRANCH="false"
@@ -50,7 +50,7 @@ while true; do
         shift 2
         ;;
     --cache-from)
-        CACHE_FROM="$2"
+        CACHE_FROM+=("$2")
         shift 2
         ;;
     --cache-to)
@@ -104,8 +104,10 @@ DEVCONTAINER_ARGS=(
     --platform "${PLATFORM}"
 )
 
-if [[ -n "$CACHE_FROM" ]]; then
-    DEVCONTAINER_ARGS+=(--cache-from "$CACHE_FROM")
+if [[ "${#CACHE_FROM[@]}" -gt 0 ]]; then
+    for cache in "${CACHE_FROM[@]}"; do
+        DEVCONTAINER_ARGS+=(--cache-from "$cache")
+    done
 fi
 
 if [[ -n "$CACHE_TO" ]]; then
@@ -133,8 +135,10 @@ if [[ "$PUSH" == "true" && "$IS_MAIN_BRANCH" == "true" ]]; then
         --platform "$PLATFORM"
     )
 
-    if [[ -n "$CACHE_FROM" ]]; then
-        DEVCONTAINER_ARGS+=(--cache-from "$CACHE_FROM")
+    if [[ "${#CACHE_FROM[@]}" -gt 0 ]]; then
+        for cache in "${CACHE_FROM[@]}"; do
+            DEVCONTAINER_ARGS+=(--cache-from "$cache")
+        done
     fi
 
     if [[ -n "$CACHE_TO" ]]; then
