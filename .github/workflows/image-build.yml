@@ -72,7 +72,7 @@ jobs:
             -- \
             ${VARIANT}
         env:
-          VARIANT: ${{ matrix.variant }}"
+          VARIANT: ${{ matrix.variant }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
           REPO_NAME: ${{ github.repository }}
