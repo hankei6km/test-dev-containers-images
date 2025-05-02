@@ -69,7 +69,7 @@ jobs:
             --tag "${BRANCH_DATE_TAG}" \
             --platform "${PLATFORM}" \
             --push "true" \
-            --cache-to "type=local,scope=${VARIANT},dest=${CACHE_DIR},mode=max" \
+            --cache-to "type=local,scope=${VARIANT},dest=${CACHE_DIR}" \
             --cache-from "type=local,scope=${VARIANT},src=${CACHE_DIR}"  \
             --user "${GITHUB_ACTOR}" \
             --is-main-branch "${IS_MAIN_BRANCH}" \
