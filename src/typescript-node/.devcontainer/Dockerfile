@@ -4,7 +4,7 @@ FROM ghcr.io/hankei6km/test-dev-containers-images:node-latest
 
 # Install tslint, typescript. eslint is installed by javascript image
 ARG NODE_MODULES="tslint-to-eslint-config typescript"
-RUN su devcontainer -c "umask 0002 && npm install -g ${NODE_MODULES}" \
+RUN su devcontainer -c "umask 0002 && source /usr/local/share/nvm/nvm.sh && npm install -g ${NODE_MODULES}" \
     && npm cache clean --force > /dev/null 2>&1
 
 # [Optional] Uncomment this section to install additional OS packages.
