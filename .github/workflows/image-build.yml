@@ -19,6 +19,10 @@ jobs:
     strategy:
       matrix:
         variant: ["basic", "dind", "node"]
+      # 同時実行を 1 に制限する目的は 2 つ。
+      # - キャシュの競合を避けるため
+      # - main ブランチへマージ時に basic が push された後、最新の main-latest を使って後続の variant がビルドされるようにするため
+      max-parallel: 1
 
     steps:
       - name: Checkout
