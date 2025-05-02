@@ -55,7 +55,7 @@ jobs:
           BRANCH_NAME="$(echo $GITHUB_HEAD_REF | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}-$(date +%Y-%m-%d)"
           for VARIANT in ${VARIANTS}; do
-            echo "Building and pushing variant: ${VARIANT}"
+            echo "::group::Building and pushing variant: ${VARIANT}"
             CACHE_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache/${VARIANT}"
             test -d "${CACHE_DIR}" || mkdir -m 0700 -p "${CACHE_DIR}"
             ./scripts/image_build.sh \
@@ -69,6 +69,7 @@ jobs:
               --is-main-branch "${IS_MAIN_BRANCH}" \
               -- \
               ${VARIANT}
+            echo "::endgroup::"
           done
         env:
           VARIANTS: "basic dind node typescript-node"
