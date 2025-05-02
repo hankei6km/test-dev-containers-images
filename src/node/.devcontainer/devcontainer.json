@@ -27,7 +27,7 @@
         "[jsonc]": {
           "editor.defaultFormatter": "vscode.typescript-language-features",
           "editor.tabSize": 2
-        }
+        },
         /*"[javascript]": {
           "editor.defaultFormatter": "vscode.typescript-language-features"
         }*/
