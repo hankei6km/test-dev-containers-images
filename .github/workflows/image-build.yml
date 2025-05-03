@@ -58,7 +58,7 @@ jobs:
                   --tag "latest" \
                   --platform "${PLATFORM}" \
                   --push "true" \
-                  --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest},mode=max" \
+                  --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest,mode=max" \
                   --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
                   --user "${GITHUB_ACTOR}" \
                   -- \
