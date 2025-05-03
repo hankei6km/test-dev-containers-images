@@ -26,20 +26,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Create temporary directory in workspace
-        run: |
-          TEMP_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache"
-          mkdir -m 0700 -p "$TEMP_DIR"
-          echo "Temporary directory created: $TEMP_DIR"
-
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: ${{ github.workspace }}/tmp/buildx-cache
-          key: ${{ runner.os }}-docker-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-docker-buildx
-
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
@@ -51,13 +37,10 @@ jobs:
 
       - name: Build and Push Variant
         run: |
-          TEMP_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache"
           BRANCH_NAME="$(echo $GITHUB_HEAD_REF | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}-$(date +%Y-%m-%d)"
           for VARIANT in ${VARIANTS}; do
             echo "::group::Building and pushing variant: ${VARIANT}"
-            CACHE_DIR="${GITHUB_WORKSPACE}/tmp/buildx-cache/${VARIANT}"
-            test -d "${CACHE_DIR}" || mkdir -m 0700 -p "${CACHE_DIR}"
             ./scripts/image_build.sh \
               --repo "${REPO_NAME}" \
               --tag "${BRANCH_DATE_TAG}" \
