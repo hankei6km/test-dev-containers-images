@@ -69,7 +69,7 @@ jobs:
               --user "${GITHUB_ACTOR}" \
               -- \
               ${VARIANT}
-              if [[ "$PUSH" == "true"]]; then \
+              if [[ "$PUSH" == "true" ]]; then \
                 ./scripts/image_build.sh \
                   --repo "${REPO_NAME}" \
                   --tag "latest" \
