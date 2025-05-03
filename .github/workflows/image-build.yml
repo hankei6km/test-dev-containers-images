@@ -64,13 +64,23 @@ jobs:
               --platform "${PLATFORM}" \
               --push "true" \
               --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG},mode=max" \
-              --cache-from "type=local,scope=${VARIANT},src=${CACHE_DIR}"  \
               --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
               --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
               --user "${GITHUB_ACTOR}" \
-              --is-main-branch "${IS_MAIN_BRANCH}" \
               -- \
               ${VARIANT}
+              if [[ "$PUSH" == "true"]]; then \
+                ./scripts/image_build.sh \
+                  --repo "${REPO_NAME}" \
+                  --tag "latest" \
+                  --platform "${PLATFORM}" \
+                  --push "true" \
+                  --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest},mode=max" \
+                  --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
+                  --user "${GITHUB_ACTOR}" \
+                  -- \
+                  ${VARIANT}
+              fi
             echo "::endgroup::"
           done
         env:
