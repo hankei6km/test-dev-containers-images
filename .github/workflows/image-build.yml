@@ -63,8 +63,9 @@ jobs:
               --tag "${BRANCH_DATE_TAG}" \
               --platform "${PLATFORM}" \
               --push "true" \
-              --cache-to "type=local,scope=${VARIANT},dest=${CACHE_DIR},mode=max" \
+              --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG},mode=max" \
               --cache-from "type=local,scope=${VARIANT},src=${CACHE_DIR}"  \
+              --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
               --user "${GITHUB_ACTOR}" \
               --is-main-branch "${IS_MAIN_BRANCH}" \
               -- \
