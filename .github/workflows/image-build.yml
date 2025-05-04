@@ -59,7 +59,7 @@ jobs:
                   --platform "${PLATFORM}" \
                   --push "true" \
                   --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest,mode=max" \
-                  --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
+                  --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest"  # これはおそらく必要ない(直前のbuildxのキャッシュが使われると思われる) \
                   --user "${GITHUB_ACTOR}" \
                   -- \
                   ${VARIANT}
