@@ -53,13 +53,13 @@ jobs:
               -- \
               ${VARIANT}
               if [[ "${IS_MAIN_BRANCH}" == "true" ]]; then \
-                # --cache-from はおそらく必要ない(直前のbuildxのキャッシュが使われると思われる) 
                 ./scripts/image_build.sh \
                   --repo "${REPO_NAME}" \
                   --tag "latest" \
                   --platform "${PLATFORM}" \
                   --push "true" \
                   --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest,mode=max" \
+                  --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
                   --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
                   --user "${GITHUB_ACTOR}" \
                   -- \
