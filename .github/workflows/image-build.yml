@@ -52,8 +52,6 @@ jobs:
               --user "${GITHUB_ACTOR}" \
               -- \
               ${VARIANT}
-              docker system df
-              docker buildx du
               if [[ "${IS_MAIN_BRANCH}" == "true" ]]; then \
                 ./scripts/image_build.sh \
                   --repo "${REPO_NAME}" \
