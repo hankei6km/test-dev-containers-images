@@ -1,7 +1,11 @@
 {
   "build": {
     "dockerfile": "./Dockerfile",
-    "context": "."
+    "context": ".",
+    "args": {
+      "BASE_REPO": "ghcr.io/hankei6km/test-dev-containers-images",
+      "BASE_TAG_SUFFIX": "latest"
+    }
   },
   "features": {
     "ghcr.io/devcontainers/features/node:1": {}
