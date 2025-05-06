@@ -31,9 +31,9 @@ jobs:
         with:
           node-version: "lts/*"
 
-      - name: Install Dev Container CLI
+      - name: Install Dev Container CLI and strip-json-comments-cli
         run: |
-          npm install -g @devcontainers/cli
+          npm install -g @devcontainers/cli strip-json-comments-cli
 
       - name: Build and Push Variant
         run: |
@@ -49,6 +49,7 @@ jobs:
               --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG},mode=max" \
               --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
               --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
+              --base-tag-suffix "${BRANCH_DATE_TAG}" \
               --user "${GITHUB_ACTOR}" \
               -- \
               ${VARIANT}
@@ -61,6 +62,7 @@ jobs:
                   --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest,mode=max" \
                   --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
                   --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
+                  --base-tag-suffix "${BRANCH_DATE_TAG}" \
                   --user "${GITHUB_ACTOR}" \
                   -- \
                   ${VARIANT}

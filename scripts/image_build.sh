@@ -13,11 +13,12 @@ Options:
         --cache-from <cache-from>    Cache source (optional, can be specified multiple times)
         --cache-to   <cache-to>      Cache destination (optional)
     -u, --user       <user>          Custom user for docker login (optional)
+        --base-tag-suffix <suffix>   Base tag suffix (default: latest)
 Arguments:
     <variant>                        Variant name (required)"
 
 # Parse arguments using getopt
-OPTIONS=$(getopt -o r:t:p:u: --long repo:,tag:,platform:,push:,cache-from:,cache-to:,user: -- "$@")
+OPTIONS=$(getopt -o r:t:p:u: --long repo:,tag:,platform:,push:,cache-from:,cache-to:,user:,base-tag-suffix: -- "$@")
 
 eval set -- "${OPTIONS}"
 
@@ -28,6 +29,7 @@ PUSH="false"
 CACHE_FROM=()
 CACHE_TO=""
 USER=""
+BASE_TAG_SUFFIX="latest"
 
 while true; do
     case "$1" in
@@ -59,6 +61,10 @@ while true; do
         USER="$2"
         shift 2
         ;;
+    --base-tag-suffix)
+        BASE_TAG_SUFFIX="$2"
+        shift 2
+        ;;
     --)
         shift
         break
@@ -88,11 +94,20 @@ else
     echo "${GH_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
 fi
 
+echo "Setting build arguments in devcontainer.json."
+
+TEMP_CONFIG_DIR=$(mktemp -d)
+trap 'rm -rf "${TEMP_CONFIG_DIR}"' EXIT
+TEMP_DEVCONTAINER_JSON="${TEMP_CONFIG_DIR}/.devcontainer/devcontainer.json"
+cp -r "./src/${VARIANT}/.devcontainer" "${TEMP_CONFIG_DIR}/"
+./scripts/image_set_build_args.sh "./src/${VARIANT}/.devcontainer/devcontainer.json" "ghcr.io/${REPO}" "${BASE_TAG_SUFFIX}" \
+    >"${TEMP_DEVCONTAINER_JSON}"
+
 echo "Pushing ${REPO}:${VARIANT}-${TAG} to ghcr.io"
 
 DEVCONTAINER_ARGS=(
     --workspace-folder "./src/${VARIANT}/"
-    --config "./src/${VARIANT}/.devcontainer/devcontainer.json"
+    --config "${TEMP_DEVCONTAINER_JSON}"
     --image-name "ghcr.io/${REPO}:${VARIANT}-${TAG}"
     --push "${PUSH}"
     --platform "${PLATFORM}"
