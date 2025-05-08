@@ -124,6 +124,7 @@ fi
 DEVCONTAINER_EXEC_ARGS=(
     --workspace-folder "./src/${VARIANT}/"
     --config "${TEMP_DEVCONTAINER_JSON}"
+    --remote-env "DOCKER_DEFAULT_PLATFORM=${DOCKER_DEFAULT_PLATFORM}"
     "./test-project/test.sh"
 )
 
