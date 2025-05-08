@@ -37,7 +37,7 @@ jobs:
 
       - name: Build and Push Variant
         run: |
-          BRANCH_NAME="$(echo $GITHUB_HEAD_REF | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
+          BRANCH_NAME="$(echo "${GITHUB_HEAD_REF}" | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}-$(date +%Y-%m-%d)"
           for VARIANT in ${VARIANTS}; do
             echo "::group::Building and pushing variant: ${VARIANT}"
@@ -52,7 +52,7 @@ jobs:
               --base-tag-suffix "${BRANCH_DATE_TAG}" \
               --user "${GITHUB_ACTOR}" \
               -- \
-              ${VARIANT}
+              "${VARIANT}"
               if [[ "${IS_MAIN_BRANCH}" == "true" ]]; then \
                 ./scripts/image_build.sh \
                   --repo "${REPO_NAME}" \
@@ -65,7 +65,7 @@ jobs:
                   --base-tag-suffix "${BRANCH_DATE_TAG}" \
                   --user "${GITHUB_ACTOR}" \
                   -- \
-                  ${VARIANT}
+                  "${VARIANT}"
               fi
             echo "::endgroup::"
           done
@@ -112,7 +112,7 @@ jobs:
 
       - name: Test Variant
         run: |
-          BRANCH_NAME="$(echo $GITHUB_HEAD_REF | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
+          BRANCH_NAME="$(echo "${GITHUB_HEAD_REF}" | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}-$(date +%Y-%m-%d)"
           for VARIANT in ${VARIANTS}; do
             echo "::group::Testing variant: ${VARIANT}"
