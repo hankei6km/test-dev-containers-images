@@ -126,10 +126,9 @@ jobs:
               -- \
               "${VARIANT}"
               if [[ "${IS_MAIN_BRANCH}" == "true" ]]; then \
-                ./scripts/image_build.sh \
+                ./scripts/test_devcontainer.sh \
                   --repo "${REPO_NAME}" \
                   --tag "latest" \
-                  --platform "${PLATFORM}" \
                   --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
                   --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
                   --base-tag-suffix "${BRANCH_DATE_TAG}" \
