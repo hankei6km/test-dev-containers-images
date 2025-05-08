@@ -23,4 +23,4 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && mkdir -m 0700 -p /tmp/actionlint \
     && curl -o /tmp/actionlint/download-actionlint.bash https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash \
     && bash /tmp/actionlint/download-actionlint.bash latest /usr/local/bin \
-    && rm /tmp/actionlint/download-actionlint.bash 
+    && rm -r /tmp/actionlint
