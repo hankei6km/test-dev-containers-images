@@ -5,11 +5,11 @@ LABEL dev.containers.features="common"
 
 ARG VARIANT
 RUN if [ "$VARIANT" = "noble" ]; then \
-        if id "ubuntu" &>/dev/null; then \
-            echo "Deleting user 'ubuntu'  for $VARIANT" && userdel -f -r ubuntu || echo "Failed to delete ubuntu user for $VARIANT"; \  
-        else \
-            echo "User 'ubuntu' does not exist for $VARIANT"; \ 
-        fi; \
+    if id "ubuntu" &>/dev/null; then \
+    echo "Deleting user 'ubuntu'  for $VARIANT" && userdel -f -r ubuntu || echo "Failed to delete ubuntu user for $VARIANT"; \  
+    else \
+    echo "User 'ubuntu' does not exist for $VARIANT"; \ 
+    fi; \
     fi
 
 # [Optional] Uncomment this section to install additional OS packages.
@@ -17,4 +17,5 @@ RUN if [ "$VARIANT" = "noble" ]; then \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends shellcheck
+    && apt-get -y install --no-install-recommends shellcheck \
+    && bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
