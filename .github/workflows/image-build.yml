@@ -78,3 +78,74 @@ jobs:
           GITHUB_HEAD_REF: ${{ github.head_ref }}
           PLATFORM: "linux/amd64,linux/arm64"
           IS_MAIN_BRANCH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+
+    strategy:
+      matrix:
+        platform: [ "linux/amd64", "linux/arm64" ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+
+      - name: Install Dev Container CLI and strip-json-comments-cli
+        run: |
+          npm install -g @devcontainers/cli strip-json-comments-cli
+
+      - name: Test Variant
+        run: |
+          BRANCH_NAME="$(echo $GITHUB_HEAD_REF | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
+          BRANCH_DATE_TAG="${BRANCH_NAME}-$(date +%Y-%m-%d)"
+          for VARIANT in ${VARIANTS}; do
+            echo "::group::Testing variant: ${VARIANT}"
+            ./scripts/test_devcontainer.sh \
+              --repo "${REPO_NAME}" \
+              --tag "${BRANCH_DATE_TAG}" \
+              --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
+              --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
+              --base-tag-suffix "${BRANCH_DATE_TAG}" \
+              --user "${GITHUB_ACTOR}" \
+              -- \
+              "${VARIANT}"
+              if [[ "${IS_MAIN_BRANCH}" == "true" ]]; then \
+                ./scripts/image_build.sh \
+                  --repo "${REPO_NAME}" \
+                  --tag "latest" \
+                  --platform "${PLATFORM}" \
+                  --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
+                  --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
+                  --base-tag-suffix "${BRANCH_DATE_TAG}" \
+                  --user "${GITHUB_ACTOR}" \
+                  -- \
+                  "${VARIANT}"
+              fi
+            echo "::endgroup::"
+          done
+        env:
+          DOCKER_DEFAULT_PLATFORM: ${{ matrix.platform }}
+          VARIANTS: "basic dind node typescript-node"
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          REPO_NAME: ${{ github.repository }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_HEAD_REF: ${{ github.head_ref }}
+          PLATFORM: "linux/amd64,linux/arm64"
+          IS_MAIN_BRANCH: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
