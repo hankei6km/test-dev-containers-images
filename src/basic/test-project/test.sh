@@ -15,7 +15,7 @@ linux/arm64)
 esac
 diff <(uname -m) <(echo "$EXPECTED_MACHINE")
 
-diff <(id) <(echo "uid=1000(devcontainer) gid=1000(devcontainer) groups=1000(devcontainer),998(nvm),999(docker)")
+diff <(id) <(echo "uid=1000(devcontainer) gid=1000(devcontainer) groups=1000(devcontainer)")
 git --version
 gh --version
 shfmt --version
