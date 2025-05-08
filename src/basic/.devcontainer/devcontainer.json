@@ -17,7 +17,8 @@
       "ppa": "false"
     },
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers-extra/features/shfmt:1": {}
+    "ghcr.io/devcontainers-extra/features/shfmt:1": {},
+    "ghcr.io/devcontainers-extra/features/actionlint:1": {}
   },
   // "userEnvProbe": "loginShell",
   // "remoteEnv": {
