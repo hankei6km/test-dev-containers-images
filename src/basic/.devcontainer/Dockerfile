@@ -16,6 +16,11 @@ RUN if [ "$VARIANT" = "noble" ]; then \
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
+# - shellcheck をインストール
+# - actionlint をインストール(https://github.com/rhysd/actionlint/blob/v1.7.7/docs/install.md#download-script)
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends shellcheck \
-    && bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+    && mkdir -m 0700 -p /tmp/actionlint \
+    && curl -o /tmp/actionlint/download-actionlint.bash https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash \
+    && bash /tmp/actionlint/download-actionlint.bash latest /usr/local/bin \
+    && rm /tmp/actionlint/download-actionlint.bash 
