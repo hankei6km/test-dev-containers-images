@@ -47,8 +47,6 @@ jobs:
               --platform "${PLATFORM}" \
               --push "true" \
               --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG},mode=max" \
-              --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
               --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
               --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_latest" \
               --base-tag-suffix "${BRANCH_DATE_TAG}" \
@@ -62,8 +60,6 @@ jobs:
                   --platform "${PLATFORM}" \
                   --push "true" \
                   --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_latest,mode=max" \
-                  --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
-                  --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
                   --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
                   --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_latest" \
                   --base-tag-suffix "${BRANCH_DATE_TAG}" \
@@ -123,10 +119,8 @@ jobs:
             ./scripts/test_devcontainer.sh \
               --repo "${REPO_NAME}" \
               --tag "${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
               --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}~latest" \
+              --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_latest" \
               --base-tag-suffix "${BRANCH_DATE_TAG}" \
               --user "${GITHUB_ACTOR}" \
               -- \
@@ -135,8 +129,6 @@ jobs:
                 ./scripts/test_devcontainer.sh \
                   --repo "${REPO_NAME}" \
                   --tag "latest" \
-                  --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-${BRANCH_DATE_TAG}" \
-                  --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}-latest" \
                   --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
                   --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_latest" \
                   --base-tag-suffix "${BRANCH_DATE_TAG}" \
