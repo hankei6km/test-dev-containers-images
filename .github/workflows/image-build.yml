@@ -39,7 +39,6 @@ jobs:
         run: |
           BRANCH_NAME="$(echo "${GITHUB_HEAD_REF}" | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}_$(date +%Y-%m-%d)"
-          BRANCH_DATE_TAG_OLD="${BRANCH_NAME}-$(date +%Y-%m-%d)"
           for VARIANT in ${VARIANTS}; do
             echo "::group::Building and pushing variant: ${VARIANT}"
             ./scripts/image_build.sh \
@@ -49,7 +48,6 @@ jobs:
               --push "true" \
               --cache-to "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG},mode=max" \
               --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG_OLD}" \
               --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_latest" \
               --base-tag-suffix "${BRANCH_DATE_TAG}" \
               --user "${GITHUB_ACTOR}" \
@@ -116,14 +114,12 @@ jobs:
         run: |
           BRANCH_NAME="$(echo "${GITHUB_HEAD_REF}" | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}_$(date +%Y-%m-%d)"
-          BRANCH_DATE_TAG_OLD="${BRANCH_NAME}-$(date +%Y-%m-%d)"
           for VARIANT in ${VARIANTS}; do
             echo "::group::Testing variant: ${VARIANT}"
             ./scripts/test_devcontainer.sh \
               --repo "${REPO_NAME}" \
               --tag "${BRANCH_DATE_TAG}" \
               --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG_OLD}" \
               --cache-from "type=registry,ref=ghcr.io/${REPO_NAME}/cache:${VARIANT}_latest" \
               --base-tag-suffix "${BRANCH_DATE_TAG}" \
               --user "${GITHUB_ACTOR}" \
