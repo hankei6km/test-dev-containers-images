@@ -17,8 +17,6 @@ Options:
 Arguments:
     <variant>                        Variant name (required)"
 
-TAG_CONCAT_CHAR="_"
-
 # Parse arguments using getopt
 OPTIONS=$(getopt -o r:t:u: --long repo:,tag:,cache-from:,cache-to:,user:,base-tag-suffix: -- "$@")
 
@@ -80,6 +78,8 @@ if [[ -z "$USER" ]]; then
     exit 1
 fi
 
+REGISTRY_HOST="$(registry_host)"
+
 if [[ -n "$USER" ]]; then
     echo "${GH_TOKEN}" | docker login "$(registry_host)" -u "$USER" --password-stdin
 else
@@ -88,14 +88,17 @@ fi
 
 echo "Setting build arguments in devcontainer.json."
 
+IMAGE_REPO="$(image_repo "${REPO}")"
+IMAGE_TAG="$(image_tag "${VARIANT}" "${TAG}")"
+
 TEMP_CONFIG_DIR=$(mktemp -d)
 trap 'rm -rf "${TEMP_CONFIG_DIR}"' EXIT
 TEMP_DEVCONTAINER_JSON="${TEMP_CONFIG_DIR}/.devcontainer/devcontainer.json"
 cp -r "./src/${VARIANT}/.devcontainer" "${TEMP_CONFIG_DIR}/"
-./scripts/image_set_build_args.sh "./src/${VARIANT}/.devcontainer/devcontainer.json" "$(registry_host)/${REPO}" "${BASE_TAG_SUFFIX}" \
+./scripts/image_set_build_args.sh "./src/${VARIANT}/.devcontainer/devcontainer.json" "${IMAGE_REPO}" "${BASE_TAG_SUFFIX}" \
     >"${TEMP_DEVCONTAINER_JSON}"
 
-echo "Pushing ${REPO}:${VARIANT}${TAG_CONCAT_CHAR}${TAG} to $(registry_host)"
+echo "Pushing ${REPO}:${IMAGE_TAG} to ${REGISTRY_HOST}"
 
 DEVCONTAINER_ARGS=(
     --remove-existing-container "true"

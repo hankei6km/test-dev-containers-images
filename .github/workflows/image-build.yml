@@ -38,9 +38,10 @@ jobs:
       - name: Build and Push Variant
         run: |
           source ./scripts/util.sh
-          REGISTRY_HOST="$(registry_host)"
-          BRANCH_NAME="$(echo "${GITHUB_HEAD_REF}" | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
-          BRANCH_DATE_TAG="${BRANCH_NAME}_$(date +%Y-%m-%d)"
+          BRANCH_NAME="${GITHUB_HEAD_REF//refs\/heads\//}"
+          CACHE_REPO="$(image_repo "${REPO_NAME}")"
+          CACHE_TAG_BRANCH_DATE="$(cache_tag "${VARIANT}" "${BRANCH_NAME}" "$(date +%Y-%m-%d)")"
+          CACHE_TAG_LATEST="$(cache_tag "${VARIANT}")"
           for VARIANT in ${VARIANTS}; do
             echo "::group::Building and pushing variant: ${VARIANT}"
             ./scripts/image_build.sh \
@@ -48,9 +49,9 @@ jobs:
               --tag "${BRANCH_DATE_TAG}" \
               --platform "${PLATFORM}" \
               --push "true" \
-              --cache-to "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG},mode=max" \
-              --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
+              --cache-to "type=registry,ref=${CACHE_REPO}:${CACHE_TAG_BRANCH_DATE},mode=max" \
+              --cache-from "type=registry,ref=${CACHE_REPO}:${CACHE_TAG_BRANCH_DATE}" \
+              --cache-from "type=registry,ref=${CACHE_REPO}:${CACHE_TAG_LATEST}" \
               --base-tag-suffix "${BRANCH_DATE_TAG}" \
               --user "${GITHUB_ACTOR}" \
               -- \
@@ -61,9 +62,9 @@ jobs:
                   --tag "latest" \
                   --platform "${PLATFORM}" \
                   --push "true" \
-                  --cache-to "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest,mode=max" \
-                  --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
-                  --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
+                  --cache-to "type=registry,ref=${CACHE_REPO}:${CACHE_TAG_LATEST},mode=max" \
+                  --cache-from "type=registry,ref=${CACHE_REPO}:${CACHE_TAG_BRANCH_DATE}" \
+                  --cache-from "type=registry,ref=${CACHE_REPO}:${CACHE_TAG_LATEST}" \
                   --base-tag-suffix "${BRANCH_DATE_TAG}" \
                   --user "${GITHUB_ACTOR}" \
                   -- \
@@ -115,16 +116,17 @@ jobs:
       - name: Test Variant
         run: |
           source ./scripts/util.sh
-          REGISTRY_HOST="$(registry_host)"
-          BRANCH_NAME="$(echo "${GITHUB_HEAD_REF}" | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
-          BRANCH_DATE_TAG="${BRANCH_NAME}_$(date +%Y-%m-%d)"
+          BRANCH_NAME="${GITHUB_HEAD_REF//refs\/heads\//}"
+          CACHE_REPO="$(image_repo "${REPO_NAME}")"
+          CACHE_TAG_BRANCH_DATE="$(cache_tag "${VARIANT}" "${BRANCH_NAME}" "$(date +%Y-%m-%d)")"
+          CACHE_TAG_LATEST="$(cache_tag "${VARIANT}")"
           for VARIANT in ${VARIANTS}; do
             echo "::group::Testing variant: ${VARIANT}"
             ./scripts/test_devcontainer.sh \
               --repo "${REPO_NAME}" \
               --tag "${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
+              --cache-from "type=registry,ref=${CACHE_REPO}:${CACHE_TAG_BRANCH_DATE}" \
+              --cache-from "type=registry,ref=${CACHE_REPO}:${CACHE_TAG_LATEST}" \
               --base-tag-suffix "${BRANCH_DATE_TAG}" \
               --user "${GITHUB_ACTOR}" \
               -- \
@@ -133,8 +135,8 @@ jobs:
                 ./scripts/test_devcontainer.sh \
                   --repo "${REPO_NAME}" \
                   --tag "latest" \
-                  --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
-                  --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
+                  --cache-from "type=registry,ref=${CACHE_REPO}:${CACHE_TAG_BRANCH_DATE}" \
+                  --cache-from "type=registry,ref=${CACHE_REPO}:${CACHE_TAG_LATEST}" \
                   --base-tag-suffix "${BRANCH_DATE_TAG}" \
                   --user "${GITHUB_ACTOR}" \
                   -- \
