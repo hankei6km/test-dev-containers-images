@@ -1,5 +1,5 @@
 {
-  "image": "ghcr.io/hankei6km/test-dev-containers-images:dind-latest",
+  "image": "ghcr.io/hankei6km/test-dev-containers-images:dind_latest",
   "features": {
     "ghcr.io/devcontainers-extra/features/devcontainers-cli:1": {}
   },
