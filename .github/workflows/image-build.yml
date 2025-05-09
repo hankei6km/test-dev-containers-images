@@ -37,7 +37,7 @@ jobs:
 
       - name: Build and Push Variant
         run: |
-          source ./scripts/utils.sh \
+          source ./scripts/util.sh \
           RESISTRY_HOST="${resistry_host}" \
           BRANCH_NAME="$(echo "${GITHUB_HEAD_REF}" | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}_$(date +%Y-%m-%d)"
@@ -114,7 +114,7 @@ jobs:
 
       - name: Test Variant
         run: |
-          source ./scripts/utils.sh \
+          source ./scripts/util.sh \
           RESISTRY_HOST="${resistry_host}" \
           BRANCH_NAME="$(echo "${GITHUB_HEAD_REF}" | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}_$(date +%Y-%m-%d)"
