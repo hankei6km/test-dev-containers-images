@@ -15,6 +15,8 @@ Options:
 Arguments:
     <variant>                        Variant name (required)"
 
+TAG_CONCAT_CHAR="_"
+
 # Parse arguments using getopt
 OPTIONS=$(getopt -o r:t:u: --long repo:,tag:,cache-from:,cache-to:,user:,base-tag-suffix: -- "$@")
 
@@ -91,7 +93,7 @@ cp -r "./src/${VARIANT}/.devcontainer" "${TEMP_CONFIG_DIR}/"
 ./scripts/image_set_build_args.sh "./src/${VARIANT}/.devcontainer/devcontainer.json" "ghcr.io/${REPO}" "${BASE_TAG_SUFFIX}" \
     >"${TEMP_DEVCONTAINER_JSON}"
 
-echo "Pushing ${REPO}:${VARIANT}-${TAG} to ghcr.io"
+echo "Pushing ${REPO}:${VARIANT}${TAG_CONCAT_CHAR}${TAG} to ghcr.io"
 
 DEVCONTAINER_ARGS=(
     --remove-existing-container "true"
