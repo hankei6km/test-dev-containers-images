@@ -39,7 +39,7 @@ jobs:
         run: |
           source ./scripts/util.sh
           BRANCH_NAME="${GITHUB_HEAD_REF//refs\/heads\//}"
-          BRANCH_DATE_TAG="${cache_tag "${BRANCH_NAME}" "$(date +%Y-%m-%d)"}"
+          BRANCH_DATE_TAG="$(cache_tag "${BRANCH_NAME}" "$(date +%Y-%m-%d)")"
           for VARIANT in ${VARIANTS}; do
             echo "::group::Building and pushing variant: ${VARIANT}"
             CACHE_REPO="$(image_repo "${REPO_NAME}")"
@@ -118,7 +118,7 @@ jobs:
         run: |
           source ./scripts/util.sh
           BRANCH_NAME="${GITHUB_HEAD_REF//refs\/heads\//}"
-          BRANCH_DATE_TAG="${cache_tag "${BRANCH_NAME}" "$(date +%Y-%m-%d)"}"
+          BRANCH_DATE_TAG="$(cache_tag "${BRANCH_NAME}" "$(date +%Y-%m-%d)")"
           for VARIANT in ${VARIANTS}; do
             echo "::group::Testing variant: ${VARIANT}"
             CACHE_REPO="$(image_repo "${REPO_NAME}")"
