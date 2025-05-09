@@ -2,7 +2,7 @@
 # 他の variant とは異なるので注意(node variant の後にビルドすること)
 ARG BASE_REPO="ghcr.io/hankei6km/test-dev-containers-images"
 ARG BASE_TAG_SUFFIX="latest"
-FROM ${BASE_REPO}:node-${BASE_TAG_SUFFIX}
+FROM ${BASE_REPO}:node_${BASE_TAG_SUFFIX}
 
 # Install tslint, typescript. eslint is installed by node-latest variant.
 # https://github.com/devcontainers/images/blob/a5fe28bee4dd323acc53d2d3702e6f2ca00d4182/src/typescript-node/.devcontainer/Dockerfile#L4-L7
