@@ -38,7 +38,7 @@ jobs:
       - name: Build and Push Variant
         run: |
           source ./scripts/util.sh
-          RESISTRY_HOST="$(resistry_host)"
+          REGISTRY_HOST="$(registry_host)"
           BRANCH_NAME="$(echo "${GITHUB_HEAD_REF}" | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}_$(date +%Y-%m-%d)"
           for VARIANT in ${VARIANTS}; do
@@ -48,9 +48,9 @@ jobs:
               --tag "${BRANCH_DATE_TAG}" \
               --platform "${PLATFORM}" \
               --push "true" \
-              --cache-to "type=registry,ref=${RESISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG},mode=max" \
-              --cache-from "type=registry,ref=${RESISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=${RESISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
+              --cache-to "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG},mode=max" \
+              --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
+              --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
               --base-tag-suffix "${BRANCH_DATE_TAG}" \
               --user "${GITHUB_ACTOR}" \
               -- \
@@ -61,9 +61,9 @@ jobs:
                   --tag "latest" \
                   --platform "${PLATFORM}" \
                   --push "true" \
-                  --cache-to "type=registry,ref=${RESISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest,mode=max" \
-                  --cache-from "type=registry,ref=${RESISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
-                  --cache-from "type=registry,ref=${RESISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
+                  --cache-to "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest,mode=max" \
+                  --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
+                  --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
                   --base-tag-suffix "${BRANCH_DATE_TAG}" \
                   --user "${GITHUB_ACTOR}" \
                   -- \
@@ -115,7 +115,7 @@ jobs:
       - name: Test Variant
         run: |
           source ./scripts/util.sh
-          RESISTRY_HOST="$(resistry_host)"
+          REGISTRY_HOST="$(registry_host)"
           BRANCH_NAME="$(echo "${GITHUB_HEAD_REF}" | sed 's|refs/heads/||' | sed 's|[^a-zA-Z0-9._-]|_|g')"
           BRANCH_DATE_TAG="${BRANCH_NAME}_$(date +%Y-%m-%d)"
           for VARIANT in ${VARIANTS}; do
@@ -123,8 +123,8 @@ jobs:
             ./scripts/test_devcontainer.sh \
               --repo "${REPO_NAME}" \
               --tag "${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=${RESISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
-              --cache-from "type=registry,ref=${RESISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
+              --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
+              --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
               --base-tag-suffix "${BRANCH_DATE_TAG}" \
               --user "${GITHUB_ACTOR}" \
               -- \
@@ -133,8 +133,8 @@ jobs:
                 ./scripts/test_devcontainer.sh \
                   --repo "${REPO_NAME}" \
                   --tag "latest" \
-                  --cache-from "type=registry,ref=${RESISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
-                  --cache-from "type=registry,ref=${RESISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
+                  --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_${BRANCH_DATE_TAG}" \
+                  --cache-from "type=registry,ref=${REGISTRY_HOST}/${REPO_NAME}/cache:${VARIANT}_latest" \
                   --base-tag-suffix "${BRANCH_DATE_TAG}" \
                   --user "${GITHUB_ACTOR}" \
                   -- \
