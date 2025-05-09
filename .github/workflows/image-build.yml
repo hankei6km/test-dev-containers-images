@@ -39,11 +39,11 @@ jobs:
         run: |
           source ./scripts/util.sh
           BRANCH_NAME="${GITHUB_HEAD_REF//refs\/heads\//}"
-          CACHE_REPO="$(image_repo "${REPO_NAME}")"
-          CACHE_TAG_BRANCH_DATE="$(cache_tag "${VARIANT}" "${BRANCH_NAME}" "$(date +%Y-%m-%d)")"
-          CACHE_TAG_LATEST="$(cache_tag "${VARIANT}")"
           for VARIANT in ${VARIANTS}; do
             echo "::group::Building and pushing variant: ${VARIANT}"
+            CACHE_REPO="$(image_repo "${REPO_NAME}")"
+            CACHE_TAG_BRANCH_DATE="$(cache_tag "${VARIANT}" "${BRANCH_NAME}" "$(date +%Y-%m-%d)")"
+            CACHE_TAG_LATEST="$(cache_tag "${VARIANT}")"
             ./scripts/image_build.sh \
               --repo "${REPO_NAME}" \
               --tag "${BRANCH_DATE_TAG}" \
@@ -117,11 +117,11 @@ jobs:
         run: |
           source ./scripts/util.sh
           BRANCH_NAME="${GITHUB_HEAD_REF//refs\/heads\//}"
-          CACHE_REPO="$(image_repo "${REPO_NAME}")"
-          CACHE_TAG_BRANCH_DATE="$(cache_tag "${VARIANT}" "${BRANCH_NAME}" "$(date +%Y-%m-%d)")"
-          CACHE_TAG_LATEST="$(cache_tag "${VARIANT}")"
           for VARIANT in ${VARIANTS}; do
             echo "::group::Testing variant: ${VARIANT}"
+            CACHE_REPO="$(image_repo "${REPO_NAME}")"
+            CACHE_TAG_BRANCH_DATE="$(cache_tag "${VARIANT}" "${BRANCH_NAME}" "$(date +%Y-%m-%d)")"
+            CACHE_TAG_LATEST="$(cache_tag "${VARIANT}")"
             ./scripts/test_devcontainer.sh \
               --repo "${REPO_NAME}" \
               --tag "${BRANCH_DATE_TAG}" \
