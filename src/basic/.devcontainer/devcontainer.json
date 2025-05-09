@@ -18,6 +18,8 @@
     },
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers-extra/features/shfmt:1": {}
+    // git を必要とするが git feature を前提としていない。feature のインストール順によってエラーとなる。
+    // "ghcr.io/devcontainers-extra/features/actionlint:1": {}
   },
   // "userEnvProbe": "loginShell",
   // "remoteEnv": {

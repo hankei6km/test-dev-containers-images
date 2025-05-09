@@ -20,4 +20,5 @@ git --version
 gh --version
 shfmt --version
 shellcheck --version
+actionlint --version
 jq --version
