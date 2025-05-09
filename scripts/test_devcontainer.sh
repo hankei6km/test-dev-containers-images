@@ -4,6 +4,8 @@ set -e
 set -u
 set -o pipefail
 
+source "$(dirname "$0")/util.sh"
+
 USAGE_MSG="Usage: $0 [OPTIONS] -- <variant>
 Options:
     -r, --repo       <repo>          Repository name (required)
@@ -79,9 +81,9 @@ if [[ -z "$USER" ]]; then
 fi
 
 if [[ -n "$USER" ]]; then
-    echo "${GH_TOKEN}" | docker login ghcr.io -u "$USER" --password-stdin
+    echo "${GH_TOKEN}" | docker login "$(registry_host)" -u "$USER" --password-stdin
 else
-    echo "${GH_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
+    echo "${GH_TOKEN}" | docker login "$(registry_host)" -u "${GITHUB_ACTOR}" --password-stdin
 fi
 
 echo "Setting build arguments in devcontainer.json."
@@ -90,10 +92,10 @@ TEMP_CONFIG_DIR=$(mktemp -d)
 trap 'rm -rf "${TEMP_CONFIG_DIR}"' EXIT
 TEMP_DEVCONTAINER_JSON="${TEMP_CONFIG_DIR}/.devcontainer/devcontainer.json"
 cp -r "./src/${VARIANT}/.devcontainer" "${TEMP_CONFIG_DIR}/"
-./scripts/image_set_build_args.sh "./src/${VARIANT}/.devcontainer/devcontainer.json" "ghcr.io/${REPO}" "${BASE_TAG_SUFFIX}" \
+./scripts/image_set_build_args.sh "./src/${VARIANT}/.devcontainer/devcontainer.json" "$(registry_host)/${REPO}" "${BASE_TAG_SUFFIX}" \
     >"${TEMP_DEVCONTAINER_JSON}"
 
-echo "Pushing ${REPO}:${VARIANT}${TAG_CONCAT_CHAR}${TAG} to ghcr.io"
+echo "Pushing ${REPO}:${VARIANT}${TAG_CONCAT_CHAR}${TAG} to $(registry_host)"
 
 DEVCONTAINER_ARGS=(
     --remove-existing-container "true"
@@ -122,7 +124,6 @@ if [[ -z "$CONTAINER_ID" ]]; then
     exit 1
 fi
 
-# ...existing code...
 DEVCONTAINER_EXEC_ARGS=(
     --workspace-folder "./src/${VARIANT}/"
     --config "${TEMP_DEVCONTAINER_JSON}"
