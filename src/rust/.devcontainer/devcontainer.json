@@ -8,10 +8,12 @@
     }
   },
   "features": {
-    "ghcr.io/devcontainers/features/rust:1": {}
+    "ghcr.io/devcontainers/features/rust:1": {
+      "profile": "default"
+    }
   },
   "remoteUser": "devcontainer",
-  "postCreateCommand": "rustup component add clippy && cargo install cargo-bump && cargo install toml-cli",
+  "postCreateCommand": "cargo install cargo-bump toml-cli",
   "customizations": {
     "vscode": {
       "extensions": [
