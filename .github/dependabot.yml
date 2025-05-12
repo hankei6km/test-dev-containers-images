@@ -36,6 +36,11 @@ updates:
       interval: "weekly"
 
   - package-ecosystem: "devcontainers"
+    directory: "/src/rust-base"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "devcontainers"
     directory: "/src/rust"
     schedule:
       interval: "weekly"
