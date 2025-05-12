@@ -11,4 +11,4 @@ RUN cargo install cargo-bump toml-cli
 FROM ${BASE_REPO}:rust-base_${BASE_TAG_SUFFIX}
 
 COPY --from=build /usr/local/cargo/bin/cargo-bump /usr/local/bin/cargo-bump
-COPY --from=build /usr/local/cargo/bin/toml-cli /usr/local/bin/toml
+COPY --from=build /usr/local/cargo/bin/toml /usr/local/bin/toml
