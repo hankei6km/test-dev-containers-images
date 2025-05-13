@@ -19,7 +19,8 @@
     "vscode": {
       "extensions": [
         "ms-azuretools.vscode-docker",
-        "docker.docker"
+        "docker.docker",
+        "ms-azuretools.vscode-containers"
       ],
       "settings": {
         "editor.formatOnSave": true,
