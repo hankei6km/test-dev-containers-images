@@ -8,7 +8,7 @@
   //   "GH_TOKEN": "${localEnv:GH_TOKEN}"
   // },
   "postCreateCommand": "npm install --global strip-json-comments-cli",
-  "remoteUser": "devcontainer",
+  // "remoteUser": "devcontainer",
   "customizations": {
     "vscode": {
       "extensions": [],
