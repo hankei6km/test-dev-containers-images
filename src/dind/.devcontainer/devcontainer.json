@@ -26,6 +26,9 @@
         "[jsonc]": {
           "editor.defaultFormatter": "vscode.json-language-features",
           "editor.tabSize": 2
+        },
+        "[dockerfile]": {
+          "editor.defaultFormatter": "ms-azuretools.vscode-containers"
         }
       }
     }
