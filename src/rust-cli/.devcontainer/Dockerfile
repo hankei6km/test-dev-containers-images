@@ -9,7 +9,9 @@ RUN apk update \
     # Add regular dependencies
     && apk add --no-cache build-base upx \
     # Add windows dependencies
-    && apk add --no-cache mingw-w64-gcc \
+    && if [ "${TARGETPLATFORM}" = "linux/amd64" ] ; then \
+      apk add --no-cache mingw-w64-gcc ; \
+    fi \
     # Add emscripten dependencies
     # alpine 3.16 ではパッケージがない.
     # && apk add --no-cache emscripten-fastcomp \
