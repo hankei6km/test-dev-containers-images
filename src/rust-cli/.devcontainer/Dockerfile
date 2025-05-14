@@ -1,5 +1,7 @@
 # この Dev Container は、https://hub.docker.com/_/rust の 1-alpine タグをベースにしている。
 # (rust feature は alpine(apk) をサポートしていないため)
+# mingw-w64-gcc は arm64(aarch64)用パッケージがなかったので一旦保留。
+# (Windos 用のビルドは主に GitHub Actions で行う予定なので、とりあえず)
 # 他の variant とは異なるので注意。 
 ARG VARIANT="alpine"
 FROM rust:1-${VARIANT}
