@@ -44,3 +44,8 @@ updates:
     directory: "/src/rust"
     schedule:
       interval: "weekly"
+
+  - package-ecosystem: "devcontainers"
+    directory: "/src/rust-cli"
+    schedule:
+      interval: "weekly"
