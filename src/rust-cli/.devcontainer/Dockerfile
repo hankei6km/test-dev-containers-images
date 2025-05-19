@@ -6,6 +6,8 @@
 ARG VARIANT="alpine"
 FROM rust:1-${VARIANT}
 
+ARG TARGETPLATFORM
+
 RUN apk update \
     # https://github.com/rust-build/rust-build.action/blob/master/Dockerfile
     # Add regular dependencies

@@ -20,3 +20,11 @@ git --version
 rustup --version
 cargo --version
 cargo clippy --version
+
+case "${EXPECTED_MACHINE}" in
+x86_64)
+    command -v x86_64-w64-mingw32-gcc
+    ;;
+*)
+    ;;
+esac
