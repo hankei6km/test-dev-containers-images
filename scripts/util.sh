@@ -13,6 +13,15 @@ escape_tag() {
     echo "${escaped_tag}"
 }
 
+branch_name() {
+    local github_head_ref="${1}"
+    if [ -z "${github_head_ref}" ]; then
+        echo "main"
+    else
+        echo "${github_head_ref//refs\/heads\//}"
+    fi
+}
+
 registry_host() {
     echo "ghcr.io"
 }
