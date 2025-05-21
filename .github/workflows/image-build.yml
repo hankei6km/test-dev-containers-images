@@ -74,7 +74,7 @@ jobs:
             echo "::endgroup::"
           done
         env:
-          VARIANTS: "basic dind node typescript-node rust-base rust rust-cli"
+          VARIANTS: "basic dind node typescript-node clasp rust-base rust rust-cli"
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
           REPO_NAME: ${{ github.repository }}
@@ -148,7 +148,7 @@ jobs:
           done
         env:
           DOCKER_DEFAULT_PLATFORM: ${{ matrix.platform }}
-          VARIANTS: "basic dind node typescript-node rust-base rust rust-cli"
+          VARIANTS: "basic dind node typescript-node clasp rust-base rust rust-cli"
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
           REPO_NAME: ${{ github.repository }}
