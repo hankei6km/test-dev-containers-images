@@ -28,7 +28,7 @@ registry_host() {
 
 image_repo() {
     local repo="${1}"
-    echo "$(registry_host)/${repo}"
+    echo "$(registry_host)/${repo}/images"
 }
 
 image_tag() {
