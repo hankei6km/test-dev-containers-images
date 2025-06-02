@@ -49,7 +49,7 @@ export GH_TOKEN="<GHCR TOKEN>"
 ./scripts/image_build.sh --user "hankei6km" --repo "hankei6km/test-dev-containers-images" --tag test --platform linux/amd64 basic
 ```
 
-> **Note:**  
+> [!NOTE]
 > ラベル `org.opencontainers.image.source` の指定は行っていない。`devcontainer build` の不具合により、現状では `--label` が使えないため。
 
 ### マルチプラットフォーム
@@ -115,7 +115,7 @@ DOCKER_DEFAULT_PLATFORM=linux/amd64 ./scripts/test_devcontainer.sh --user "<USER
 ローカルでビルドスクリプトを実行しプッシュした場合でも作成されるが、この場合はリポジトリとの関連付けが行われないので、GitHub Actions(リポジトリ)へのアクセスを追加する必要がある。
 
 
-> **Note:**  
+> [!NOTE]
 > 前述のようにイメージへのラベルは設定されないので、各イメージがパッケージ(リポジトリ)を指すためのメタ情報は常に含まれない。
 
 
