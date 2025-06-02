@@ -125,6 +125,9 @@ DOCKER_DEFAULT_PLATFORM=linux/amd64 ./scripts/test_devcontainer.sh --user "<USER
 
 `foo` variant を追加する場合。
 
+> [!NOTE]
+> タグ内の最初の `_` は Variant 名と付加情報を分割する意味合いがある。よって Variant 名には `_` は含めない。Variant 内で単語を分割するようなときは `-` を利用する。
+
 ### ファイルを配置
 
 以下のファイルを配置する。
